@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 设置为UserDao接口方法提供sql语句配置 -->
+<mapper namespace="com.example.blog.mapper.TipsMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.blog.entity.Tips">
+        <id column="id" property="id" />
+        <result column="type" property="type" />
+        <result column="title" property="title" />
+        <result column="content" property="content" />
+        <result column="img" property="img" />
+        <result column="date" property="date" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, type, title, content, img, date
+    </sql>
+
+    <select id="getList" resultMap="BaseResultMap">
+        SELECT * FROM Tips
+        <where>
+            <if test="type!=null and type!=''">type =#{type} and </if>
+            <if test="title!=null and title!=''">title =#{title} and </if>
+            <if test="date!=null and date!=''">date =#{date} and </if>
+1=1
+        </where>
+    </select>
+
+    <update id="update" parameterType="com.example.blog.entity.Tips">
+      UPDATE Tips set type=#{type},title=#{title},content=#{content},img=#{img} where id=#{id}
+    </update>
+
+
+    <insert id="add" parameterType="com.example.blog.entity.Tips">
+       INSERT INTO Tips(type, title, content, img, date)VALUES(#{type},#{title},#{content},#{img},#{date})
+    </insert>
+
+
+    <delete id="del" parameterType="com.example.blog.entity.Tips">
+        DELETE FROM Tips WHERE ID=#{id}
+    </delete>
+
+
+</mapper>

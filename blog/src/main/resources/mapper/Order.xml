@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 设置为UserDao接口方法提供sql语句配置 -->
+<mapper namespace="com.example.blog.mapper.OrderMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.blog.entity.Order">
+        <id column="id" property="id" />
+        <result column="uid" property="uid" />
+        <result column="pid" property="pid" />
+        <result column="nid" property="nid" />
+        <result column="way" property="way" />
+        <result column="status" property="status" />
+        <result column="remark" property="remark" />
+        <result column="addr" property="addr" />
+        <result column="name" property="name" />
+        <result column="tel" property="tel" />
+        <result column="date" property="date" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, uid, pid, nid, way, status, remark, addr, name, tel, date
+    </sql>
+
+    <select id="getList" resultMap="BaseResultMap">
+        SELECT * FROM `Order`
+        <where>
+            <if test="uid!=null and uid!=''">uid =#{uid} and </if>
+            <if test="pid!=null and pid!=''">pid =#{pid} and </if>
+            <if test="nid!=null and nid!=''">nid =#{nid} and </if>
+            <if test="way!=null and way!=''">way =#{way} and </if>
+            <if test="status!=null and status!=''">status =#{status} and </if>
+            1=1
+        </where>
+    </select>
+
+    <select id="getByPid" resultMap="BaseResultMap">
+        SELECT * FROM `Order` where id = #{id}
+    </select>
+
+    <update id="update" parameterType="com.example.blog.entity.Order">
+      UPDATE `Order` set status = #{status}, remark = #{remark},way = #{way},addr = #{addr},name = #{name}, tel = #{tel} where id=#{id}
+    </update>
+
+
+    <insert id="add" parameterType="com.example.blog.entity.Order">
+       INSERT INTO `Order`(uid, pid, nid, way, status, remark, addr, name, tel, date)VALUES(#{uid},#{pid},#{nid},#{way},#{status},#{remark},#{addr},#{name},#{tel},#{date})
+    </insert>
+
+
+    <delete id="del" parameterType="com.example.blog.entity.Order">
+        DELETE FROM `Order` WHERE ID=#{id}
+    </delete>
+
+
+</mapper>

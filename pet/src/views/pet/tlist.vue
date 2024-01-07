@@ -1,0 +1,456 @@
+<template>
+
+  <!--  v-loading在接口未请求到数据之前，显示加载中，直到请求到数据后消失。-->
+  <div v-loading="loading">
+    <el-row :gutter="20">
+      <el-col :span="24">
+        <el-row :gutter="20" class="plist">
+          <el-form :inline="true" :model="formInline" class="user-search">
+            <el-form-item label="宠物：">
+              <el-input
+                size="small"
+                v-model="formInline.name"
+                placeholder="输入宠物"
+              ></el-input>
+            </el-form-item>
+            <el-form-item label="品种：">
+              <el-input
+                size="small"
+                v-model="formInline.category"
+                placeholder="输入宠物"
+              ></el-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button
+                size="small"
+                type="primary"
+                icon="el-icon-search"
+                @click="getPet"
+              >搜索
+              </el-button
+              >
+            </el-form-item>
+          </el-form>
+          <el-col :span="6" v-for="(item, index) in pets" :key="index">
+            <div class="pet-card" style="display: flex">
+              <el-image
+                style="
+                  width: 110px;
+                  height: 110px;
+                  border-radius: 10px;
+                  margin-right: 10px;
+                "
+                :src="item.img"
+                :preview-src-list="srcList"
+                fit="cover"
+                @click="preview(item.path)"
+              ></el-image>
+              <div style="width: calc(100% - 120px)">
+                <div class="pt">
+                  {{ item.name }}
+                  <a href="javascript: void(0)" class="ly" @click="ly(item)">领养</a>
+                  <a href="javascript: void(0)" class="ly" @click="detail(item)" style="margin-right: 10px;">详情</a>
+                </div>
+                <div class="ptt">
+                  <span>性别：{{ item.sex }}</span>
+                  <span style="float: right">年龄:{{ item.age }}</span>
+                </div>
+                <div class="ptt">
+                  <span>健康状况:{{ item.height }}</span>
+                  <span style="float: right">品种：{{ item.category }}</span>
+                </div>
+                <div class="ptt">所在地:{{ item.addr }}</div>
+              </div>
+            </div>
+          </el-col>
+        </el-row>
+      </el-col>
+    </el-row>
+
+    <el-dialog
+      :title="title"
+      :visible.sync="editFormVisible"
+      width="50%"
+      @click="closeDialog"
+    >
+      <div v-if="flag">
+        <div style="color: red">
+          提示：该宠物的领养难度为：{{ editForm.type }},你需要达到{{
+            editForm.type == "简单" ? 60 : editForm.type == "普通" ? 80 : 100
+          }}分，每题10分
+        </div>
+        <div
+          v-for="(item, index) in question"
+          :key="index"
+          style="line-height: 30px; margin-top: 10px"
+        >
+          <div>{{ index + 1 }}、{{ item.title }}</div>
+          <el-radio-group v-model="item.check">
+            <el-radio label="a">{{ item.qa }}</el-radio>
+            <el-radio label="b">{{ item.qb }}</el-radio>
+            <el-radio label="c">{{ item.qc }}</el-radio>
+            <el-radio label="d">{{ item.qd }}</el-radio>
+          </el-radio-group>
+        </div>
+      </div>
+      <el-form
+        v-else
+        label-width="100px"
+        :rules="rules"
+        :model="editForm"
+        ref="editForm"
+      >
+        <el-form-item label="宠物：" prop="name">
+          <el-input
+            size="small"
+            v-model="editForm.name"
+            auto-complete="off"
+            placeholder="请输入宠物"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="提货方式：" prop="way">
+          <el-select
+            v-model="editForm.way"
+            size="small"
+            placeholder="请选择提货方式"
+          >
+            <el-option
+              v-for="item in options"
+              :key="item"
+              :label="item"
+              :value="item"
+            >
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="收货人：" prop="name" v-if="editForm.way == '物流'">
+          <el-input
+            size="small"
+            v-model="editForm.name"
+            auto-complete="off"
+            placeholder="请输入"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="收货人电话：" prop="tel" v-if="editForm.way == '物流'">
+          <el-input
+            size="small"
+            v-model="editForm.tel"
+            auto-complete="off"
+            placeholder="请输入"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="收货地址：" prop="addr" v-if="editForm.way == '物流'">
+          <el-input
+            size="small"
+            v-model="editForm.addr"
+            auto-complete="off"
+            placeholder="请输入"
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="备注：">
+          <el-input
+            size="small"
+            v-model="editForm.remark"
+            auto-complete="off"
+            placeholder="请输入备注"
+          ></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="small" @click="closeDialog">返回</el-button>
+        <el-button size="small" type="primary" @click="save('editForm')"
+        >提交
+        </el-button
+        >
+      </div>
+    </el-dialog>
+<!--详情对话框-->
+    <el-dialog
+      :title="title"
+      :visible.sync="editFormVisible2"
+      width="50%"
+      @click="closeDialog"
+    >
+      <el-row :gutter="20">
+        <el-col :span="16" style="line-height: 30px;">
+          <el-col :span="12">名字：{{ editForm.name }}</el-col>
+          <el-col :span="12">品种：{{ editForm.category }}</el-col>
+          <el-col :span="12">体重：{{ editForm.weight }}</el-col>
+          <el-col :span="12">性别：{{ editForm.sex }}</el-col>
+          <el-col :span="12">年龄：{{ editForm.age }}</el-col>
+          <el-col :span="12">健康状况：{{ editForm.height }}</el-col>
+        </el-col>
+        <el-col :span="8">
+          <el-image style="height: 100px" :src="editForm.img"></el-image>
+        </el-col>
+        <el-row :gutter="20">
+          <el-col :span="8">生活习惯：{{ editForm.character }}</el-col>
+          <el-col :span="8">领养模式：{{ editForm.demand }}</el-col>
+          <el-col :span="8">所在地：{{ editForm.addr }}</el-col>
+        </el-row>
+      </el-row>
+      <div slot="footer" class="dialog-footer">
+        <el-button size="small" @click="closeDialog">返回</el-button>
+      </div>
+    </el-dialog>
+  </div>
+</template>
+
+<script>
+import axios from "axios";
+
+// import Pagination from "../../components/Pagination";
+
+export default {
+  data() {
+    return {
+      editFormVisible: false, //控制编辑页面显示与隐藏
+      editFormVisible1: false,
+      editFormVisible2: false,
+      title: "修改",
+      editForm: {},
+      options: ["自提", "物流"],
+      video: "",
+      pets: [],
+      tips: [],
+      user: {},
+      role: localStorage.getItem("role"),
+      notices: [],
+      loading: false,
+      rules: {
+        way: [{required: true, message: "请选择提货方式", trigger: "change"}],
+        name: [{required: true, message: "请输入", trigger: "blur"}],
+        tel: [{required: true, message: "请输入", trigger: "blur"}],
+        addr: [{required: true, message: "请输入", trigger: "blur"}],
+      },
+      srcList: [],
+      kinds: [],
+      colors: [],
+      formInline: {
+        status: "未领养",
+      },
+      question: [],
+      flag: true,
+      score: 0,
+    };
+  },
+  // 注册组件
+  // components: {
+  //   Pagination,
+  // },
+  /**
+   * 创建完毕
+   */
+  created() {
+    this.getPet();
+    this.user = JSON.parse(localStorage.getItem("user"));
+  },
+  /**
+   * 里面的方法只有被调用才会执行
+   */
+  methods: {
+    preview(url) {
+      this.srcList = [url];
+    },
+    detail(item) {
+      this.title = item.name + "-详细信息";
+      this.editFormVisible2 = true;
+      this.editForm = {...item};
+    },
+    getPet() {
+      let that = this;
+      axios.post(this.httpUrl + "pet/list", that.formInline).then((res) => {
+        that.pets = res.data.list;
+      });
+    },
+    ly(item) {
+      if (this.role !== "1" && this.role !== "2") {
+        this.$message({
+          type: "error",
+          message: "领养请先注册会员！",
+        });
+      } else {
+        this.title = "领养相关信息填写";
+        this.editFormVisible = true;
+        this.getQuestion();
+        this.editForm = {
+          pid: item.id,
+          uid: this.user.id,
+          status: "申请中",
+          name: item.name,
+          nid: item.uid,
+          type: item.demand,
+        };
+      }
+    },
+    getQuestion() {
+      let that = this;
+      axios.post(this.httpUrl + "question/list").then((res) => {
+        that.question = res.data.list;
+      });
+    },
+    view(item) {
+      this.title = item.title;
+      this.editFormVisible1 = true;
+      this.editForm = {...item};
+    },
+    save(formName) {
+      this.$refs[formName].validate((valid) => {
+        if (valid) {
+          this.loading = true;
+          this.editForm.date = new Date();
+          axios.post(this.httpUrl + `order/add`, this.editForm).then((res) => {
+            this.loading = false;
+            if (res.data.code === -1) {
+              this.$message({
+                type: "error",
+                message: res.data.msg,
+              });
+              return;
+            }
+            this.$message({
+              type: "success",
+              message: `领养申请成功，等待审核`,
+            });
+            this.getPet();
+            this.closeDialog();
+          });
+        } else {
+          this.loading = false;
+          return false;
+        }
+      });
+    },
+    // 关闭编辑、增加弹出框
+    closeDialog() {
+      this.editFormVisible = false;
+      this.editFormVisible1 = false;
+      this.editFormVisible2 = false;
+    },
+    goto(url) {
+      this.$router.push({path: url});
+    },
+    reset() {
+      this.formInline = {status: "未领养"};
+      this.getPet();
+    },
+    sumbit() {
+      this.score = 0;
+      this.question.forEach((item) => {
+        if (item.answer == item.check) {
+          this.score += 10;
+        }
+      });
+      let target =
+        this.editForm.type == "简单"
+          ? 60
+          : this.editForm.type == "普通"
+            ? 80
+            : 100;
+      if (this.score < target) {
+        this.$message({
+          type: "error",
+          message: `您的分数为${this.score}分，非常抱歉，考试为通过，不能领养`,
+        });
+        this.closeDialog()
+      } else {
+        this.$message({
+          type: "success",
+          message: `恭喜你，通过考核，请填写领养信息`,
+        });
+        this.flag = false
+      }
+    },
+  },
+};
+</script>
+
+<style scoped>
+.user-search {
+  margin-top: 20px;
+}
+
+.userRole {
+  width: 100%;
+}
+
+.el-divider--horizontal {
+  margin: 0;
+}
+
+.el-form-item {
+  margin-bottom: 10px;
+}
+
+.video {
+  height: 38vh;
+  width: 100%;
+}
+
+.card {
+  border: solid 1px #ccc;
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 20px;
+}
+
+.title {
+  color: #000;
+  font-weight: bold;
+  margin-bottom: 5px;
+}
+
+.pet-card {
+  border: solid 1px #ccc;
+  border-radius: 10px;
+  padding: 10px;
+  background: #f2f2f2;
+  line-height: 2;
+  margin-bottom: 20px;
+}
+
+.pt {
+  color: #000;
+  font-weight: bold;
+  font-size: 15px;
+}
+
+.ptt {
+  color: #666;
+  font-size: 13px;
+}
+
+.ly {
+  color: #409eff;
+  font-size: 14px;
+  font-weight: 400;
+  float: right;
+}
+
+.notice {
+  color: #409eff;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: 2;
+}
+
+.notices {
+  height: 25vh;
+  overflow-y: auto;
+}
+
+.plist {
+  height: 85vh;
+  overflow-y: auto;
+}
+
+.el-form-item[data-v-69489bd5] {
+  margin-bottom: 0;
+}
+
+.user-search[data-v-69489bd5] {
+  margin-top: 0;
+}
+</style>
+
+

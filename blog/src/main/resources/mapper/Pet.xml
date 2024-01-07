@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 设置为UserDao接口方法提供sql语句配置 -->
+<mapper namespace="com.example.blog.mapper.PetMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.blog.entity.Pet">
+        <id column="id" property="id" />
+        <result column="uid" property="uid" />
+        <result column="name" property="name" />
+        <result column="img" property="img" />
+        <result column="category" property="category" />
+        <result column="sex" property="sex" />
+        <result column="age" property="age" />
+        <result column="weight" property="weight" />
+        <result column="height" property="height" />
+        <result column="addr" property="addr" />
+        <result column="character" property="character" />
+        <result column="demand" property="demand" />
+        <result column="status" property="status" />
+        <result column="date" property="date" />
+        <result column="uid" property="uid" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, img, category, sex, age, weight, height, addr, character, demand, status, date, uid
+    </sql>
+
+    <select id="get" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT * FROM Pet WHERE `NAME`=#{name}
+    </select>
+
+    <select id="getUid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT * FROM Pet WHERE id=#{id}
+    </select>
+
+    <select id="getPid" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT * FROM Pet WHERE id=#{pid}
+    </select>
+
+    <select id="getList" resultMap="BaseResultMap">
+        SELECT * FROM Pet
+        <where>
+            <if test="uid!=null and uid!=''">`uid` = #{uid} and </if>
+            <if test="name!=null and name!=''">`NAME` = #{name} and </if>
+            <if test="status!=null and status!=''">status = #{status} and </if>
+            <if test="category!=null and category!=''">category = #{category} and </if>
+                 1=1
+        </where>
+        order by id desc
+    </select>
+
+    <update id="update" parameterType="com.example.blog.entity.Pet">
+      UPDATE Pet set `name` = #{name}, img = #{img},sex = #{sex},category = #{category},age = #{age},weight = #{weight},
+     height = #{height},status = #{status},addr = #{addr},`character` = #{character},demand =#{demand}  where id=#{id}
+    </update>
+
+
+    <insert id="add" parameterType="com.example.blog.entity.Pet">
+       INSERT INTO Pet(uid, `name`, img, category, sex, age, weight, height, addr, `character`, demand, status,`date`)VALUES(#{uid},#{name},#{img},#{category},#{sex},#{age},#{weight},#{height},#{addr},#{character},#{demand},#{status},#{date})
+    </insert>
+
+
+    <delete id="del" parameterType="com.example.blog.entity.Pet">
+        DELETE FROM Pet WHERE ID=#{id}
+    </delete>
+
+    <select id="getKind" parameterType="com.example.blog.entity.Pet" resultMap="BaseResultMap">
+        SELECT kind FROM `pet` where status = '未领养' group by kind
+    </select>
+
+    <select id="getColor" parameterType="com.example.blog.entity.Pet" resultMap="BaseResultMap">
+        SELECT color FROM `pet` where status = '未领养' group by color
+    </select>
+
+
+</mapper>

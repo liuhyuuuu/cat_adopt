@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 设置为UserDao接口方法提供sql语句配置 -->
+<mapper namespace="com.example.blog.mapper.QuestionMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.blog.entity.Question">
+        <id column="id" property="id" />
+        <result column="title" property="title" />
+        <result column="answer" property="answer" />
+        <result column="qa" property="qa" />
+        <result column="qb" property="qb" />
+        <result column="qc" property="qc" />
+        <result column="qd" property="qd" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, title, answer, qa,qb,qc,qd
+    </sql>
+
+    <select id="getList" resultType="com.example.blog.entity.Question">
+        SELECT * FROM Question ORDER BY RAND() LIMIT 10
+    </select>
+
+</mapper>

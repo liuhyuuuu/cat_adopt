@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 设置为UserDao接口方法提供sql语句配置 -->
+<mapper namespace="com.example.blog.mapper.AdminMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.blog.entity.Admin">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="pwd" property="pwd" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, pwd
+    </sql>
+
+    <select id="selectUserByLoginName" parameterType="java.lang.String" resultType="com.example.blog.entity.Admin">
+        SELECT * FROM Admin WHERE `NAME`=#{name}
+    </select>
+
+    <select id="getById" parameterType="java.lang.Integer" resultType="com.example.blog.entity.Admin">
+        SELECT * FROM Admin WHERE id=#{id}
+    </select>
+
+
+    <select id="getList" resultType="com.example.blog.entity.Admin">
+        SELECT * FROM Admin
+        <where>
+            <if test="name!=null and name!=''">`NAME` =#{name}</if>
+        </where>
+    </select>
+
+    <update id="update" parameterType="com.example.blog.entity.Admin">
+      UPDATE Admin set name = #{name},pwd = #{pwd} where id=#{id}
+    </update>
+
+
+    <insert id="add" parameterType="com.example.blog.entity.Admin">
+        INSERT INTO Admin(`NAME`,PWD)VALUES(#{name},#{pwd})
+</insert>
+
+
+    <delete id="del" parameterType="com.example.blog.entity.Admin">
+        DELETE FROM Admin WHERE ID=#{id}
+    </delete>
+
+
+</mapper>

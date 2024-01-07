@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 设置为UserDao接口方法提供sql语句配置 -->
+<mapper namespace="com.example.blog.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.example.blog.entity.User">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="pwd" property="pwd" />
+        <result column="sex" property="sex" />
+        <result column="tel" property="tel" />
+        <result column="email" property="email" />
+        <result column="addr" property="addr" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, `NAME`,PWD,SEX,TEL,email,addr,status
+    </sql>
+
+    <select id="selectUserByLoginName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        SELECT * FROM USER WHERE `NAME`=#{name}
+    </select>
+
+    <select id="getById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        SELECT * FROM USER WHERE id=#{id}
+    </select>
+
+
+    <select id="getList" resultMap="BaseResultMap">
+        SELECT * FROM User
+        <where>
+            <if test="name!=null and name!=''">`NAME` =#{name}</if>
+        </where>
+    </select>
+
+    <update id="update" parameterType="com.example.blog.entity.User">
+      UPDATE User set name = #{name}, pwd = #{pwd}, sex = #{sex}, tel = #{tel},email = #{email},addr = #{addr},status = #{status}  where id=#{id}
+    </update>
+
+
+    <insert id="add" parameterType="com.example.blog.entity.User">
+        INSERT INTO User(`NAME`,PWD,SEX,TEL,email,addr,status)VALUES(#{name},#{pwd},#{sex},#{tel},#{email},#{addr},#{status})
+</insert>
+
+
+    <delete id="del" parameterType="com.example.blog.entity.User">
+        DELETE FROM User WHERE ID=#{id}
+    </delete>
+
+    <update id="blacklist" parameterType="com.example.blog.entity.User">
+        UPDATE user set status = #{status}  where id=#{id}
+    </update>
+
+
+</mapper>
