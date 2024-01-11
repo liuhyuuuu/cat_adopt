@@ -18,22 +18,22 @@
 
     <!-- 通用查询结果列 -->
     <sql id="Base_Column_List">
-        id, `NAME`,PWD,SEX,TEL,email,addr,status
+        id, name,pwd,sex,tel,email,addr,status
     </sql>
 
     <select id="selectUserByLoginName" parameterType="java.lang.String" resultMap="BaseResultMap">
-        SELECT * FROM USER WHERE `NAME`=#{name}
+        SELECT * FROM user WHERE name=#{name}
     </select>
 
     <select id="getById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
-        SELECT * FROM USER WHERE id=#{id}
+        SELECT * FROM user WHERE id=#{id}
     </select>
 
 
     <select id="getList" resultMap="BaseResultMap">
-        SELECT * FROM User
+        SELECT * FROM user
         <where>
-            <if test="name!=null and name!=''">`NAME` =#{name}</if>
+            <if test="name!=null and name!=''">name =#{name}</if>
         </where>
     </select>
 
@@ -43,17 +43,20 @@
 
 
     <insert id="add" parameterType="com.example.blog.entity.User">
-        INSERT INTO User(`NAME`,PWD,SEX,TEL,email,addr,status)VALUES(#{name},#{pwd},#{sex},#{tel},#{email},#{addr},#{status})
+        INSERT INTO User(name,pwd,sex,tel,email,addr,status)VALUES(#{name},#{pwd},#{sex},#{tel},#{email},#{addr},#{status})
 </insert>
 
 
     <delete id="del" parameterType="com.example.blog.entity.User">
-        DELETE FROM User WHERE ID=#{id}
+        DELETE FROM user WHERE id=#{id}
     </delete>
 
     <update id="blacklist" parameterType="com.example.blog.entity.User">
         UPDATE user set status = #{status}  where id=#{id}
     </update>
 
+    <update id="updatepwd" parameterType="com.example.blog.entity.User">
+        UPDATE user set pwd = #{pwd}  where id=#{id}
+    </update>
 
 </mapper>

@@ -49,7 +49,6 @@ export default {
           this.user.name = '未登录'
           this.role = "0"
           localStorage.setItem("role", 0);
-          this.$store.commit('logout', 'false')
             this.$message({
               type: 'success',
               message: '已退出登录!'

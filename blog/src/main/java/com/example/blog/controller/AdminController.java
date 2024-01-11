@@ -34,7 +34,7 @@ public class AdminController {
         Admin admin1 = adminDao.selectUserByLoginName(admin.getName());
         if (admin1 == null) {
             msg = "该用户不存在！";
-            code = 400;
+            code = -1;
         } else {
             if (admin1.getPwd().equals(admin.getPwd())) {
                 result.put("user",admin1);

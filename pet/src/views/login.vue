@@ -155,7 +155,7 @@ export default {
         if (valid) {
           this.logining = true;
           axios.post(this.httpUrl + (this.ruleForm.role === 1 ? "user/login" : "admin/login"), this.ruleForm).then((res) => {
-            if (res.data.code === 400) {
+            if (res.data.code !== 200) {
               this.$message.error(res.data.msg);
               this.logining = false;
             } else {

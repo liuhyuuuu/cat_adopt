@@ -2,7 +2,7 @@
   <el-container class="index-con">
     <el-container class="main-con">
       <el-header class="index-header">
-        <navcon></navcon>
+        <navcon/>
       </el-header>
       <el-main clss="index-main">
         <router-view/>

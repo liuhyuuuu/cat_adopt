@@ -24,16 +24,12 @@
               <div style="width: calc(100% - 120px)">
                 <div class="pt">
                   {{ item.name }}
-                  <a href="javascript: void(0)" class="ly" @click="ly(item)"
-                  >领养</a
-                  >
+                  <a href="javascript: void(0)" class="ly" @click="ly(item)">领养</a>
                   <a
                     href="javascript: void(0)"
                     class="ly"
                     @click="detail(item)"
-                    style="margin-right: 10px"
-                  >详情</a
-                  >
+                    style="margin-right: 10px">详情</a>
                 </div>
                 <div class="ptt">
                   <span>性别：{{ item.sex }}</span>
@@ -78,17 +74,13 @@
         </div>
         <div class="card">
           <div>
-            <!--            <el-button type="primary" @click="goto('/ask/list?type=1')"-->
-            <!--            >领养咨询-->
-            <!--            </el-button-->
-            <!--            >-->
             <el-button type="warning" @click="goto('/ask/list')">领养留言
             </el-button>
           </div>
         </div>
       </el-col>
     </el-row>
-
+<!--领养申请-->
     <el-dialog
       :title="title"
       :visible.sync="editFormVisible"
@@ -115,6 +107,7 @@
           </el-radio-group>
         </div>
       </div>
+
       <el-form
         v-else
         label-width="100px"
@@ -148,7 +141,7 @@
         <el-form-item label="收货人：" prop="name" v-if="editForm.way == '物流'">
           <el-input
             size="small"
-            v-model="editForm.name"
+            v-model="editForm.uname"
             auto-complete="off"
             placeholder="请输入"
           ></el-input>
@@ -279,7 +272,6 @@ export default {
       srcList: [],
       kinds: [],
       colors: [],
-      // pets: ["流浪猫", "流浪狗"],
       formInline: {
         status: "未领养",
       },
@@ -297,9 +289,7 @@ export default {
     this.user = JSON.parse(localStorage.getItem("user"));
     this.role = localStorage.getItem("role");
   },
-  /**
-   * 里面的方法只有被调用才会执行
-   */
+
   methods: {
     preview(url) {
       this.srcList = [url];
@@ -331,6 +321,7 @@ export default {
           uid: this.user.id,
           status: "申请中",
           name: item.name,
+          uname: this.user.name,
           nid: item.uid,
           type: item.demand,
         };

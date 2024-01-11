@@ -197,7 +197,6 @@
 
 <script>
 import axios from "axios";
-// import Pagination from "../../components/Pagination";
 
 export default {
   data() {
@@ -209,13 +208,7 @@ export default {
         name: "",
       },
       listData: [], //用户数据
-      // // 分页参数
-      // pageparm: {
-      //   currentPage: 1,
-      //   pageSize: 10,
-      //   total: 10,
-      // },
-      // user: {},
+
       options: ["男", "女"],
       statusList: ["未领养", "已领养", "删除"],
       statusList1: ["简单", "普通", "困难"],
@@ -246,13 +239,8 @@ export default {
       user: JSON.parse(localStorage.getItem("user")),
     };
   },
-  // 注册组件
-  // components: {
-  //   Pagination,
-  // },
-  /**
-   * 创建完毕
-   */
+
+
   created() {
     if (this.role == 1) {
       this.formInline.uid = this.user.id;

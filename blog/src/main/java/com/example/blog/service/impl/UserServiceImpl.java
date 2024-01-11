@@ -43,5 +43,10 @@ public class UserServiceImpl implements UserService {
         userDao.blacklist(user);
     }
 
+    @Override
+    public void updatepwd(User user) {
+        userDao.updatepwd(user);
+    }
+
 
 }

@@ -1,5 +1,4 @@
 <template>
-
   <!--  v-loading在接口未请求到数据之前，显示加载中，直到请求到数据后消失。-->
   <div v-loading="loading">
     <el-row :gutter="20">
@@ -66,7 +65,7 @@
         </el-row>
       </el-col>
     </el-row>
-
+    <!--领养申请-->
     <el-dialog
       :title="title"
       :visible.sync="editFormVisible"
@@ -126,7 +125,7 @@
         <el-form-item label="收货人：" prop="name" v-if="editForm.way == '物流'">
           <el-input
             size="small"
-            v-model="editForm.name"
+            v-model="editForm.uname"
             auto-complete="off"
             placeholder="请输入"
           ></el-input>
@@ -158,13 +157,15 @@
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button size="small" @click="closeDialog">返回</el-button>
-        <el-button size="small" type="primary" @click="save('editForm')"
+        <el-button size="small" type="primary" @click="sumbit()" v-if="flag"
         >提交
-        </el-button
-        >
+        </el-button>
+        <el-button size="small" type="primary" @click="save('editForm')" v-else
+        >保存
+        </el-button>
       </div>
     </el-dialog>
-<!--详情对话框-->
+    <!--详情对话框-->
     <el-dialog
       :title="title"
       :visible.sync="editFormVisible2"
@@ -199,8 +200,6 @@
 <script>
 import axios from "axios";
 
-// import Pagination from "../../components/Pagination";
-
 export default {
   data() {
     return {
@@ -234,20 +233,13 @@ export default {
       score: 0,
     };
   },
-  // 注册组件
-  // components: {
-  //   Pagination,
-  // },
-  /**
-   * 创建完毕
-   */
+
   created() {
     this.getPet();
     this.user = JSON.parse(localStorage.getItem("user"));
   },
-  /**
-   * 里面的方法只有被调用才会执行
-   */
+
+
   methods: {
     preview(url) {
       this.srcList = [url];
@@ -270,7 +262,7 @@ export default {
           message: "领养请先注册会员！",
         });
       } else {
-        this.title = "领养相关信息填写";
+        this.title = "领养答题与相关信息填写";
         this.editFormVisible = true;
         this.getQuestion();
         this.editForm = {
@@ -278,6 +270,7 @@ export default {
           uid: this.user.id,
           status: "申请中",
           name: item.name,
+          uname: this.user.name,
           nid: item.uid,
           type: item.demand,
         };
@@ -350,7 +343,7 @@ export default {
       if (this.score < target) {
         this.$message({
           type: "error",
-          message: `您的分数为${this.score}分，非常抱歉，考试为通过，不能领养`,
+          message: `您的分数为${this.score}分，非常抱歉，考试为不通过，不能领养`,
         });
         this.closeDialog()
       } else {

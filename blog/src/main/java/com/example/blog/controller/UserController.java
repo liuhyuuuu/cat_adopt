@@ -44,7 +44,7 @@ public class UserController {
                 msg="登录成功";
             }  else {
                 msg = "密码错误！";
-                code = -1;
+                code = 400;
             }
         }
         result.put("msg",msg);
@@ -149,6 +149,18 @@ public class UserController {
         userService.blacklist(user);
         code = 200;
         msg = "拉黑成功";
+        result.put("msg",msg);
+        result.put("code",code);
+        return result;
+    }
+    @RequestMapping("/updatepwd")//重置密码
+    public Map updatepwd(@RequestBody User user) {
+        Map result = new HashMap();
+        String msg = "";
+        int code = 0;
+        userService.updatepwd(user);
+        code = 200;
+        msg = "重置密码成功";
         result.put("msg",msg);
         result.put("code",code);
         return result;

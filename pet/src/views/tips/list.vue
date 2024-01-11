@@ -123,7 +123,7 @@
 
 <script>
 import axios from "axios";
-// import Pagination from "../../components/Pagination";
+
 export default {
   data() {
     return {
@@ -136,10 +136,6 @@ export default {
         name: "",
       },
       listData: [], //用户数据
-      // 分页参数
-      // formInline: {
-      //   uid: -1,
-      // },
       user: {},
       rules: {
         type: [
@@ -153,10 +149,6 @@ export default {
       options: ["喂养", "健康", "训练", "行为解析"],
     };
   },
-  // 注册组件
-  // components: {
-  //   Pagination,
-  // },
   /**
    * 创建完毕
    */
@@ -203,12 +195,6 @@ export default {
       this.editFormVisible = true;
       this.editForm = { date: new Date(), uid: -1 };
     },
-    // edit(row) {
-    //   this.type = 2;
-    //   this.title = "修改";
-    //   this.editFormVisible = true;
-    //   this.editForm = { ...row };
-    // },
     save(formName) {
       this.$refs[formName].validate((valid) => {
         if (valid) {

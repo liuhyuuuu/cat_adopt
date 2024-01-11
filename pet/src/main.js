@@ -5,8 +5,6 @@ import 'element-ui/lib/theme-chalk/index.css';
 import App from './App';
 // 引入路由
 import router from './router';
-// 引入状态管理
-import store from './vuex/store';
 // 引入icon
 import './assets/icon/iconfont.css'
 
@@ -17,19 +15,12 @@ Vue.config.productionTip = false;
 
 // 使用element UI
 Vue.use(ElementUI);
-// 过滤器
-import * as custom from './utils/util'
-
-Object.keys(custom).forEach(key => {
-    Vue.filter(key, custom[key])
-})
 
 Vue.prototype.httpUrl = "http://localhost:8100/";
 
 new Vue({
     el: '#app',
     router,
-    store, //使用store vuex状态管理
     components: { App },
     template: '<App/>',
     data: {
@@ -37,3 +28,4 @@ new Vue({
         Bus: new Vue()
     }
 })
+

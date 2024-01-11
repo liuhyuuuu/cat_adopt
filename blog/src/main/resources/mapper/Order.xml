@@ -25,7 +25,7 @@
     </sql>
 
     <select id="getList" resultMap="BaseResultMap">
-        SELECT * FROM `Order`
+        SELECT * FROM `order`
         <where>
             <if test="uid!=null and uid!=''">uid =#{uid} and </if>
             <if test="pid!=null and pid!=''">pid =#{pid} and </if>
@@ -37,21 +37,21 @@
     </select>
 
     <select id="getByPid" resultMap="BaseResultMap">
-        SELECT * FROM `Order` where id = #{id}
+        SELECT * FROM `order` where id = #{id}
     </select>
 
     <update id="update" parameterType="com.example.blog.entity.Order">
-      UPDATE `Order` set status = #{status}, remark = #{remark},way = #{way},addr = #{addr},name = #{name}, tel = #{tel} where id=#{id}
+      UPDATE `order` set status = #{status}, remark = #{remark},way = #{way},addr = #{addr},name = #{name}, tel = #{tel} where id=#{id}
     </update>
 
 
     <insert id="add" parameterType="com.example.blog.entity.Order">
-       INSERT INTO `Order`(uid, pid, nid, way, status, remark, addr, name, tel, date)VALUES(#{uid},#{pid},#{nid},#{way},#{status},#{remark},#{addr},#{name},#{tel},#{date})
+       INSERT INTO `order`(uid, pid, nid, way, status, remark, addr, name, tel, date)VALUES(#{uid},#{pid},#{nid},#{way},#{status},#{remark},#{addr},#{name},#{tel},#{date})
     </insert>
 
 
     <delete id="del" parameterType="com.example.blog.entity.Order">
-        DELETE FROM `Order` WHERE ID=#{id}
+        DELETE FROM `order` WHERE id=#{id}
     </delete>
 
 

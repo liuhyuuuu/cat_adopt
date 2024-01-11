@@ -24,5 +24,6 @@ public interface UserMapper {
 
     void del(User user);
     void blacklist(User user);
+    void updatepwd(User user);
 
 }

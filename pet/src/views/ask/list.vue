@@ -23,7 +23,7 @@
               size="small"
               type="danger"
               @click="add"
-              v-if="role==='1'"
+              v-if="role==='1'||role==='0'"
             >新增
             </el-button>
           </el-form-item>

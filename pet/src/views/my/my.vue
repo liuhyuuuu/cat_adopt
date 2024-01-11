@@ -5,12 +5,12 @@
       <el-tab-pane label="个人中心" name="1">
         <el-table size="small" :data="listData" border style="width: 100%">
           <el-table-column prop="name" label="姓名"></el-table-column>
-          <el-table-column prop="sex" label="性别"></el-table-column>
-          <el-table-column prop="tel" label="电话"></el-table-column>
-          <el-table-column prop="email" label="邮箱"></el-table-column>
-          <el-table-column prop="addr" label="地址"></el-table-column>
-          <el-table-column prop="status" label="注册状态"></el-table-column>
-          <el-table-column align="center" label="操作" width="240">
+          <el-table-column prop="sex" label="性别" v-if="role ==='1'"></el-table-column>
+          <el-table-column prop="tel" label="电话" v-if="role ==='1'"></el-table-column>
+          <el-table-column prop="email" label="邮箱" v-if="role==='1'"></el-table-column>
+          <el-table-column prop="addr" label="地址" v-if="role==='1'"></el-table-column>
+          <el-table-column prop="status" label="注册状态" v-if="role==='1'"></el-table-column>
+          <el-table-column align="center" label="操作" width="240" v-if="role==='1'">
             <template slot-scope="scope">
               <el-button size="mini" type="primary" @click="edit(scope.row)">编辑</el-button>
               <el-button size="mini" type="danger" @click="editPwd(scope.row)">密码重置</el-button>
@@ -18,7 +18,7 @@
           </el-table-column>
         </el-table>
       </el-tab-pane>
-      <el-tab-pane label="领养进度" name="2" v-if="role=='1'">
+      <el-tab-pane label="领养进度" name="2" v-if="role ==='1'">
         <MyOrder></MyOrder>
       </el-tab-pane>
     </el-tabs>
@@ -267,7 +267,7 @@ export default {
           }
           axios
             .post(
-              this.httpUrl + "user/update",
+              this.httpUrl + "user/updatepwd",
               {id: this.obj.id, pwd: this.editForm.newPwd1},
               {headers: {"Content-Type": "application/json"}}
             )
